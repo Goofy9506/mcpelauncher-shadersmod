@@ -26,13 +26,13 @@ jobs:
           ndktarget: aarch64-linux-android-
     steps:
     - run: sudo apt update && sudo apt install llvm g++ ninja-build
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: nttld/setup-ndk@v1
       id: setup-ndk
       with:
         ndk-version: r21e
         add-to-path: true
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
      
  
     - name: Configure
