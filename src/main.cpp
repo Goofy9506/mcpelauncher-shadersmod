@@ -164,7 +164,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       },
       nullptr);
 
-  dlclose(h);
+  // dlclose(h);
   printf("%s\n", "HIIII3");
 }
 
