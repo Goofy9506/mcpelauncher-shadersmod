@@ -1,4 +1,3 @@
-#include "filewatcher.hpp"
 #include "json.hpp"
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -64,18 +63,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
 
   auto h = dlopen("libmcpelauncher_mod.so", 0);
 
-  // DIR *dr;
-  // struct dirent *en;
-  // dr = opendir((dataDir + "/shaders").c_str()); // open all directory
-  // if (dr) {
-  //   while ((en = readdir(dr)) != NULL) {
-  //     if (strstr(en->d_name, ".material.bin")) {
-  //       shadersList.push_back(std::string(en->d_name));
-  //     }
-  //   }
-  //   closedir(dr); // close all directory
-  // }
-
   DIR *dr2;
   struct dirent *en2;
   dr2 = opendir((dataDir + "/games/com.mojang/minecraftpe").c_str());
@@ -88,17 +75,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     auto j_str = to_string(j[0]["pack_id"]);
     packIdArray.push_back(j_str);
     std::cout << j_str << std::endl;
-    filewatch::FileWatch<std::wstring> watch(
-        dataDir + L"/games/com.mojang/minecraftpe/"
-                  "global_resource_packs.json"s,
-        [](const std::wstring &path, const filewatch::Event change_type) {
-          std::wcout << path << L"\n";
-          if (change_type == filewatch::Event::modified) {
-            std::cout << "The file was modified. This can be a change in the "
-                         "time stamp or attributes."
-                      << '\n';
-          };
-        });
     file2.close();
     closedir(dr2);
   }
@@ -111,11 +87,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
       DIR *dir2;
-      dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
-                      std::string(ent->d_name) + "/renderer/materials")
-                         .c_str());
-      std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
-                          std::string(ent->d_name) + "/manifest.json"));
+      dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" + std::string(ent->d_name) + "/renderer/materials").c_str());
+      std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" + std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
