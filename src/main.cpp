@@ -1,3 +1,4 @@
+#include "filewatcher.hpp"
 #include "json.hpp"
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -87,6 +88,17 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     auto j_str = to_string(j[0]["pack_id"]);
     packIdArray.push_back(j_str);
     std::cout << j_str << std::endl;
+    filewatch::FileWatch<std::wstring> watch(
+        dataDir + L"/games/com.mojang/minecraftpe/"
+                  "global_resource_packs.json"s,
+        [](const std::wstring &path, const filewatch::Event change_type) {
+          std::wcout << path << L"\n";
+          if (change_type == filewatch::Event::modified) {
+            std::cout << "The file was modified. This can be a change in the "
+                         "time stamp or attributes."
+                      << '\n';
+          };
+        });
     file2.close();
     closedir(dr2);
   }
@@ -121,26 +133,14 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
 
         file.close();
         closedir(dir2);
-        if (folderList.size() > 0) {
-          std::cout << folderList[0] << std::endl;
-        }
-        if (shadersList.size() > 0) {
-          std::cout << shadersList[0] << std::endl;
-        }
-
-        // printf("%s\n", ent->d_name);
       }
     }
     closedir(dir);
   }
 
-  printf("%s\n", "HIIII");
-
   mcpelauncher_preinithook =
       (decltype(mcpelauncher_preinithook))dlsym(h, "mcpelauncher_preinithook");
   mcpelauncher_log = (decltype(mcpelauncher_log))dlsym(h, "mcpelauncher_log");
-
-  printf("%s\n", "HIIII2");
 
   mcpelauncher_preinithook(
       "AAssetManager_open",
@@ -154,7 +154,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
-            printf("%s\n", "HIIII2");
             return AAssetManager_open(
                 mgr,
                 (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
@@ -172,7 +171,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       },
       nullptr);
 
-  dlclose(h);
+  // dlclose(h);
 }
 
 extern "C" __attribute__((visibility("default"))) void mod_init() {}
