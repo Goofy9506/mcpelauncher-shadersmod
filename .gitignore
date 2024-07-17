@@ -66,4 +66,3 @@ main_original.cpp
 Makefile
 .cache/clangd/index/main.cpp.740C63F065EBB463.idx
 libmcpelaunchershadersmod.so
-src/filewatcher.hpp
