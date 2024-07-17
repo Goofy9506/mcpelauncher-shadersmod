@@ -107,6 +107,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       if (dir2) {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
+
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
@@ -114,11 +115,18 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               shadersList.push_back(std::string(en->d_name));
             }
           }
+        } else {
+          printf("%s\n", "Pack ID not found");
         }
+
         file.close();
         closedir(dir2);
-                std::cout << folderList[0] << std::endl;
-        std::cout << shadersList[0] << std::endl;
+        if (folderList.size() > 0) {
+          std::cout << folderList[0] << std::endl;
+        }
+        if (shadersList.size() > 0) {
+          std::cout << shadersList[0] << std::endl;
+        }
 
         // printf("%s\n", ent->d_name);
       }
@@ -165,7 +173,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       nullptr);
 
   dlclose(h);
-  printf("%s\n", "HIIII3");
 }
 
 extern "C" __attribute__((visibility("default"))) void mod_init() {}
