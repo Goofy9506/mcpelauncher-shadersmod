@@ -4,7 +4,7 @@ This is a mod for mcpelauncher-manifest that allows for RenderDragon shaders.
 
 Usage: 
 
-Put your shaders in a folder called shaders in the data root folder. RenderDragon shaders have an extension of `.material.bin`.  
+Install your shaders the regular way, make sure your shaders are at the very top of your global resource packs list or it will not work.
 
 NewbX Future Shaders running with the mod on:
   ![NewbX Future](https://github.com/user-attachments/assets/586c472a-5d4d-4807-a7ad-bd50f324206c)

@@ -63,18 +63,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
 
   auto h = dlopen("libmcpelauncher_mod.so", 0);
 
-  // DIR *dr;
-  // struct dirent *en;
-  // dr = opendir((dataDir + "/shaders").c_str()); // open all directory
-  // if (dr) {
-  //   while ((en = readdir(dr)) != NULL) {
-  //     if (strstr(en->d_name, ".material.bin")) {
-  //       shadersList.push_back(std::string(en->d_name));
-  //     }
-  //   }
-  //   closedir(dr); // close all directory
-  // }
-
   DIR *dr2;
   struct dirent *en2;
   dr2 = opendir((dataDir + "/games/com.mojang/minecraftpe").c_str());
@@ -99,11 +87,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
       DIR *dir2;
-      dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
-                      std::string(ent->d_name) + "/renderer/materials")
-                         .c_str());
-      std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
-                          std::string(ent->d_name) + "/manifest.json"));
+      dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" + std::string(ent->d_name) + "/renderer/materials").c_str());
+      std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" + std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
@@ -121,26 +106,14 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
 
         file.close();
         closedir(dir2);
-        if (folderList.size() > 0) {
-          std::cout << folderList[0] << std::endl;
-        }
-        if (shadersList.size() > 0) {
-          std::cout << shadersList[0] << std::endl;
-        }
-
-        // printf("%s\n", ent->d_name);
       }
     }
     closedir(dir);
   }
 
-  printf("%s\n", "HIIII");
-
   mcpelauncher_preinithook =
       (decltype(mcpelauncher_preinithook))dlsym(h, "mcpelauncher_preinithook");
   mcpelauncher_log = (decltype(mcpelauncher_log))dlsym(h, "mcpelauncher_log");
-
-  printf("%s\n", "HIIII2");
 
   mcpelauncher_preinithook(
       "AAssetManager_open",
@@ -154,7 +127,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
-            printf("%s\n", "HIIII2");
             return AAssetManager_open(
                 mgr,
                 (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
@@ -172,7 +144,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       },
       nullptr);
 
-  dlclose(h);
+  // dlclose(h);
 }
 
 extern "C" __attribute__((visibility("default"))) void mod_init() {}
