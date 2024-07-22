@@ -71,10 +71,12 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     std::ifstream file2((dataDir +
                          "/games/com.mojang/minecraftpe/"
                          "global_resource_packs.json")); // open all directory
-    nlohmann::json j = nlohmann::json::parse(file2);
-    auto j_str = to_string(j[0]["pack_id"]);
-    packIdArray.push_back(j_str);
-    std::cout << j_str << std::endl;
+    if (file2) {
+      nlohmann::json j = nlohmann::json::parse(file2);
+      auto j_str = to_string(j[0]["pack_id"]);
+      packIdArray.push_back(j_str);
+      std::cout << j_str << std::endl;
+    }
     file2.close();
     closedir(dr2);
   }
@@ -87,8 +89,11 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
       DIR *dir2;
-      dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" + std::string(ent->d_name) + "/renderer/materials").c_str());
-      std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" + std::string(ent->d_name) + "/manifest.json"));
+      dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                      std::string(ent->d_name) + "/renderer/materials")
+                         .c_str());
+      std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
+                          std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
