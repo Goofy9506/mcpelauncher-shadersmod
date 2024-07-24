@@ -157,10 +157,10 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         if ((strstr(filename, ".material.bin"))) {
           std::string fName = std::string(filename).substr(
               std::string(filename).find_last_of("/") + 1);
-          if (std::find(shadersList.begin(), shadersList.end(), fName) !=
-              shadersList.end()) {
-            // fName.erase(std::remove(fName.begin(), fName.end(), '\"'),
-            //             fName.end());
+
+          // if (std::find(shadersList.begin(), shadersList.end(), fName) !=
+          //     shadersList.end()) {
+          if (shadersList.size() != 0) {
 
             for (auto it = 0; it != shadersList.size(); ++it) {
               __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
@@ -173,6 +173,9 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                                             .c_str(),
                                         mode);
             }
+            // fName.erase(std::remove(fName.begin(), fName.end(), '\"'),
+            //             fName.end());
+
             // AAssetManager_open(mgr,
             //  (assetsToRoot + dataDir +
             //   "/games/com.mojang/resource_packs/" +
