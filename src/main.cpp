@@ -115,7 +115,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
-            if ((en3 = readdir(dir3)) != NULL) {
+            while ((en3 = readdir(dir3)) != NULL) {
               if (strstr(en3->d_name, ".material.bin")) {
                 shadersList.push_back(std::string(en3->d_name));
               }
