@@ -110,8 +110,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
         // subpackArray[0].erase(
-        //     std::remove(subpackArray[0].begin(), subpackArray[0].end(), '\"'),
-        //     subpackArray[0].end());
+        //     std::remove(subpackArray[0].begin(), subpackArray[0].end(),
+        //     '\"'), subpackArray[0].end());
 
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
@@ -159,8 +159,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               std::string(filename).find_last_of("/") + 1);
           if (std::find(shadersList.begin(), shadersList.end(), fName) !=
               shadersList.end()) {
-            fName.erase(std::remove(fName.begin(), fName.end(), '\"'),
-                        fName.end());
+            // fName.erase(std::remove(fName.begin(), fName.end(), '\"'),
+            //             fName.end());
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
