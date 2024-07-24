@@ -77,7 +77,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       auto j_str = to_string(j[0]["pack_id"]);
       auto e_str = to_string(j[0]["subpack"]);
       packIdArray.push_back(j_str);
-      if (e_str) {
+      if (e_str != "") {
         subpackArray.push_back(e_str);
         std::cout << e_str << std::endl;
       }
