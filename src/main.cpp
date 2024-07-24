@@ -75,9 +75,9 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     if (file2) {
       nlohmann::json j = nlohmann::json::parse(file2);
       auto j_str = to_string(j[0]["pack_id"]);
-      auto e_str = to_string(j[0]["subpack"]);
       packIdArray.push_back(j_str);
-      if (e_str != "") {
+      if (j[0]["subpack"] != NULL) {
+        auto e_str = to_string(j[0]["subpack"]);
         subpackArray.push_back(e_str);
         std::cout << e_str << std::endl;
       }
@@ -119,6 +119,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                 shadersList.push_back(std::string(en3->d_name));
               }
             }
+            closedir(dir3);
 
             if (strstr(en->d_name, ".material.bin")) {
               shadersList.push_back(std::string(en->d_name));
