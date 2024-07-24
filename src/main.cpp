@@ -102,7 +102,11 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                          .c_str());
       dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/subpacks/" +
-                      std::string(subpackArray[0]) + "/renderer/materials")
+                      subpackArray[0].c_str() + "/renderer/materials")
+                         .c_str());
+      printf("%s\n", (dataDir + "/games/com.mojang/resource_packs/" +
+                      std::string(ent->d_name) + "/subpacks/" +
+                      subpackArray[0].c_str() + "/renderer/materials")
                          .c_str());
       std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/manifest.json"));
@@ -118,6 +122,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                 if (strstr(en3->d_name, ".material.bin")) {
                   shadersList.push_back(std::string(en3->d_name));
                 }
+                printf("%s\n", "Subpack Found");
               }
               closedir(dir3);
             }
