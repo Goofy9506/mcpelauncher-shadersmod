@@ -106,6 +106,9 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       if (dir2) {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
+        subpackArray[0].erase(
+            std::remove(subpackArray[0].begin(), subpackArray[0].end(), '\"'),
+            subpackArray[0].end());
 
         if (j_str == packIdArray[0]) {
           dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
