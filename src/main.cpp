@@ -163,17 +163,16 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             //             fName.end());
 
             for (auto it = 0; it != shadersList.size(); ++it) {
-              AAssetManager_open(mgr,
-                                 (assetsToRoot + dataDir +
-                                  "/games/com.mojang/resource_packs/" +
-                                  shadersList[it])
-                                     .c_str(),
-                                 mode);
-              std::cout << shadersList[it] << std::endl;
+              __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
+                                  "Patched shader %s via AAssetManager",
+                                  fName.c_str());
+              return AAssetManager_open(mgr,
+                                        (assetsToRoot + dataDir +
+                                         "/games/com.mojang/resource_packs/" +
+                                         shadersList[it])
+                                            .c_str(),
+                                        mode);
             }
-            return __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
-                                       "Patched shader %s via AAssetManager",
-                                       fName.c_str());
             // AAssetManager_open(mgr,
             //  (assetsToRoot + dataDir +
             //   "/games/com.mojang/resource_packs/" +
