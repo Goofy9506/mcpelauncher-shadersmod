@@ -101,10 +101,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                       std::string(ent->d_name) + "/renderer/materials")
                          .c_str());
 
-      printf("%s\n", (dataDir + "/games/com.mojang/resource_packs/" +
-                      std::string(ent->d_name) + "/subpacks/" +
-                      subpackArray[0].c_str() + "/renderer/materials")
-                         .c_str());
       std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
@@ -113,6 +109,10 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
 
         if (j_str == packIdArray[0]) {
           dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                          std::string(ent->d_name) + "/subpacks/" +
+                          subpackArray[0] + "/renderer/materials")
+                             .c_str());
+          printf("%s\n", (dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/subpacks/" +
                           subpackArray[0] + "/renderer/materials")
                              .c_str());
