@@ -22,7 +22,6 @@ std::vector<std::string> shadersList;
 std::vector<std::string> folderList;
 std::vector<std::string> packIdArray;
 std::vector<std::string> subpackArray;
-std::vector<std::string> subpackList;
 
 int countCharacterOccurrences(const std::string &str, char character) {
   int count = 0;
@@ -121,8 +120,11 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             if (dir3) {
               while ((en3 = readdir(dir3)) != NULL) {
                 if (strstr(en3->d_name, ".material.bin")) {
-                  subpackList.push_back(std::string(en3->d_name));
-                  std::cout << std::string(en3->d_name) << std::endl;
+                  std::string e = folderList[0] + "/subpacks/" +
+                                  subpackArray[0] + "/renderer/materials/" +
+                                  std::string(en3->d_name);
+                  shadersList.push_back(std::string(e));
+                  std::cout << std::string(e) << std::endl;
                 }
                 printf("%s\n", "Subpack Found");
               }
@@ -130,7 +132,9 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             }
 
             if (strstr(en->d_name, ".material.bin")) {
-              shadersList.push_back(std::string(en->d_name));
+              std::string e = folderList[0] + "/renderer/materials/" +
+                              std::string(en->d_name);
+              shadersList.push_back(std::string(e));
             }
           }
         } else {
@@ -159,12 +163,12 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
-            return AAssetManager_open(
-                mgr,
-                (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
-                 folderList[0] + "/renderer/materials/" + fName)
-                    .c_str(),
-                mode); // uses custom asset path like
+            return AAssetManager_open(mgr,
+                                      (assetsToRoot + dataDir +
+                                       "/games/com.mojang/resource_packs/" +
+                                       fName)
+                                          .c_str(),
+                                      mode); // uses custom asset path like
             // /path/to/assets/../../../ to get to root
 
           } else {
@@ -173,33 +177,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         } else {
           return AAssetManager_open(mgr, filename, mode);
         }
-
-        // if ((strstr(filename, ".material.bin"))) {
-        //   std::string fName = std::string(filename).substr(
-        //       std::string(filename).find_last_of("/") + 1);
-        //   if (std::find(subpackList.begin(), subpackList.end(), fName) !=
-        //       subpackList.end()) {
-        //     __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
-        //                         "Patched shader %s via AAssetManager",
-        //                         fName.c_str());
-        //     subpackArray[0].erase(std::remove(subpackArray[0].begin(),
-        //                                       subpackArray[0].end(), '\"'),
-        //                           subpackArray[0].end());
-        //     return AAssetManager_open(
-        //         mgr,
-        //         (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
-        //          folderList[0] + "/subpacks/" + subpackArray[0] +
-        //          "/renderer/materials/" + fName)
-        //             .c_str(),
-        //         mode); // uses custom asset path like
-        //     // /path/to/assets/../../../ to get to root
-
-        //   } else {
-        //     return AAssetManager_open(mgr, filename, mode);
-        //   }
-        // } else {
-        //   return AAssetManager_open(mgr, filename, mode);
-        // }
       },
       nullptr);
 
