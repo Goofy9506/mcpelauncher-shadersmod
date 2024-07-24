@@ -154,6 +154,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       "AAssetManager_open",
       (void *)+[](AAssetManager *mgr, const char *filename,
                   int mode) -> AAsset * {
+        std::cout << std::string(filename) << std::endl;
         if ((strstr(filename, ".material.bin"))) {
           std::string fName = std::string(filename).substr(
               std::string(filename).find_last_of("/") + 1);
