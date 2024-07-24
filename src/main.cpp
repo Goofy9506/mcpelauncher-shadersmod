@@ -116,16 +116,13 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                           std::string(ent->d_name) + "/subpacks/" +
                           subpackArray[0] + "/renderer/materials")
                              .c_str());
-          printf("%s\n", (dataDir + "/games/com.mojang/resource_packs/" +
-                          std::string(ent->d_name) + "/subpacks/" +
-                          subpackArray[0] + "/renderer/materials")
-                             .c_str());
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
             if (dir3) {
               while ((en3 = readdir(dir3)) != NULL) {
                 if (strstr(en3->d_name, ".material.bin")) {
                   subpackList.push_back(std::string(en3->d_name));
+                  std::cout << std::string(en3->d_name) << std::endl;
                 }
                 printf("%s\n", "Subpack Found");
               }
@@ -174,15 +171,21 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
           } else {
             return AAssetManager_open(mgr, filename, mode);
           }
+        } else {
+          return AAssetManager_open(mgr, filename, mode);
+        }
 
+        if ((strstr(filename, ".material.bin"))) {
+          std::string fName = std::string(filename).substr(
+              std::string(filename).find_last_of("/") + 1);
           if (std::find(subpackList.begin(), subpackList.end(), fName) !=
               subpackList.end()) {
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
-            subpackArray[0].erase(
-            std::remove(subpackArray[0].begin(), subpackArray[0].end(), '\"'),
-            subpackArray[0].end());
+            subpackArray[0].erase(std::remove(subpackArray[0].begin(),
+                                              subpackArray[0].end(), '\"'),
+                                  subpackArray[0].end());
             return AAssetManager_open(
                 mgr,
                 (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
