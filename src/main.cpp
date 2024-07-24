@@ -21,6 +21,7 @@ std::string dataDir = "/data/data/com.mojang.minecraftpe";
 std::vector<std::string> shadersList;
 std::vector<std::string> folderList;
 std::vector<std::string> packIdArray;
+std::vector<std::string> subpackArray;
 
 int countCharacterOccurrences(const std::string &str, char character) {
   int count = 0;
@@ -74,7 +75,12 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
     if (file2) {
       nlohmann::json j = nlohmann::json::parse(file2);
       auto j_str = to_string(j[0]["pack_id"]);
+      auto e_str = to_string(j[0]["subpack"]);
       packIdArray.push_back(j_str);
+      if (e_str) {
+        subpackArray.push_back(e_str);
+        std::cout << e_str << std::endl;
+      }
       std::cout << j_str << std::endl;
     }
     file2.close();
@@ -84,14 +90,21 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
   DIR *dir;
   struct dirent *ent;
   struct dirent *en;
+  struct dirent *en3;
   dir = opendir((dataDir + "/games/com.mojang/resource_packs").c_str());
   if (dir) {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
       DIR *dir2;
+      DIR *dir3;
       dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/renderer/materials")
                          .c_str());
+      if (subpackArray.end() != subpackArray.begin()) {
+        dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                        std::string(subpackArray[0]) + "/renderer/materials")
+                           .c_str());
+      }
       std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
@@ -101,6 +114,12 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
+            if ((en3 = readdir(dir3)) != NULL) {
+              if (strstr(en3->d_name, ".material.bin")) {
+                shadersList.push_back(std::string(en3->d_name));
+              }
+            }
+
             if (strstr(en->d_name, ".material.bin")) {
               shadersList.push_back(std::string(en->d_name));
             }
