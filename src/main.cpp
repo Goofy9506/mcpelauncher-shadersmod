@@ -100,10 +100,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/renderer/materials")
                          .c_str());
-      dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
-                      std::string(ent->d_name) + "/subpacks/" +
-                      subpackArray[0].c_str() + "/renderer/materials")
-                         .c_str());
+
       printf("%s\n", (dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/subpacks/" +
                       subpackArray[0].c_str() + "/renderer/materials")
@@ -115,6 +112,10 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         auto j_str = to_string(j["header"]["uuid"]);
 
         if (j_str == packIdArray[0]) {
+          dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                          std::string(ent->d_name) + "/subpacks/" +
+                          subpackArray[0] + "/renderer/materials")
+                             .c_str());
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
             if (dir3) {
