@@ -165,7 +165,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             for (auto it = 0; it != shadersList.size(); ++it) {
               __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                   "Patched shader %s via AAssetManager",
-                                  fName.c_str());
+                                  shadersList[it].c_str());
               return AAssetManager_open(mgr,
                                         (assetsToRoot + dataDir +
                                          "/games/com.mojang/resource_packs/" +
