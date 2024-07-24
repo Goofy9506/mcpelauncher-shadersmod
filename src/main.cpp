@@ -22,6 +22,7 @@ std::vector<std::string> shadersList;
 std::vector<std::string> folderList;
 std::vector<std::string> packIdArray;
 std::vector<std::string> subpackArray;
+std::vector<std::string> subpackList;
 
 int countCharacterOccurrences(const std::string &str, char character) {
   int count = 0;
@@ -124,8 +125,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             if (dir3) {
               while ((en3 = readdir(dir3)) != NULL) {
                 if (strstr(en3->d_name, ".material.bin")) {
-                  shadersList.push_back(std::string(en3->d_name));
-                        std::cout << std::string(en3->d_name) << std::endl;
+                  subpackList.push_back(std::string(en3->d_name));
                 }
                 printf("%s\n", "Subpack Found");
               }
@@ -167,6 +167,24 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                 mgr,
                 (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
                  folderList[0] + "/renderer/materials/" + fName)
+                    .c_str(),
+                mode); // uses custom asset path like
+            // /path/to/assets/../../../ to get to root
+
+          } else {
+            return AAssetManager_open(mgr, filename, mode);
+          }
+
+          if (std::find(subpackList.begin(), subpackList.end(), fName) !=
+              subpackList.end()) {
+            __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
+                                "Patched shader %s via AAssetManager",
+                                fName.c_str());
+            return AAssetManager_open(
+                mgr,
+                (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
+                 folderList[0] + "/subpacks/" + subpackArray[0] +
+                 "/renderer/materials/" + fName)
                     .c_str(),
                 mode); // uses custom asset path like
             // /path/to/assets/../../../ to get to root
