@@ -134,7 +134,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             }
           }
         } else {
-          printf("%s\n", "Pack ID not found");
         }
 
         file.close();
@@ -175,32 +174,32 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
           return AAssetManager_open(mgr, filename, mode);
         }
 
-        if ((strstr(filename, ".material.bin"))) {
-          std::string fName = std::string(filename).substr(
-              std::string(filename).find_last_of("/") + 1);
-          if (std::find(subpackList.begin(), subpackList.end(), fName) !=
-              subpackList.end()) {
-            __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
-                                "Patched shader %s via AAssetManager",
-                                fName.c_str());
-            subpackArray[0].erase(std::remove(subpackArray[0].begin(),
-                                              subpackArray[0].end(), '\"'),
-                                  subpackArray[0].end());
-            return AAssetManager_open(
-                mgr,
-                (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
-                 folderList[0] + "/subpacks/" + subpackArray[0] +
-                 "/renderer/materials/" + fName)
-                    .c_str(),
-                mode); // uses custom asset path like
-            // /path/to/assets/../../../ to get to root
+        // if ((strstr(filename, ".material.bin"))) {
+        //   std::string fName = std::string(filename).substr(
+        //       std::string(filename).find_last_of("/") + 1);
+        //   if (std::find(subpackList.begin(), subpackList.end(), fName) !=
+        //       subpackList.end()) {
+        //     __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
+        //                         "Patched shader %s via AAssetManager",
+        //                         fName.c_str());
+        //     subpackArray[0].erase(std::remove(subpackArray[0].begin(),
+        //                                       subpackArray[0].end(), '\"'),
+        //                           subpackArray[0].end());
+        //     return AAssetManager_open(
+        //         mgr,
+        //         (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
+        //          folderList[0] + "/subpacks/" + subpackArray[0] +
+        //          "/renderer/materials/" + fName)
+        //             .c_str(),
+        //         mode); // uses custom asset path like
+        //     // /path/to/assets/../../../ to get to root
 
-          } else {
-            return AAssetManager_open(mgr, filename, mode);
-          }
-        } else {
-          return AAssetManager_open(mgr, filename, mode);
-        }
+        //   } else {
+        //     return AAssetManager_open(mgr, filename, mode);
+        //   }
+        // } else {
+        //   return AAssetManager_open(mgr, filename, mode);
+        // }
       },
       nullptr);
 
