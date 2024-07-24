@@ -160,6 +160,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               std::string(filename).find_last_of("/") + 1);
           if (std::find(shadersList.begin(), shadersList.end(), fName) !=
               shadersList.end()) {
+            fName.erase(std::remove(fName.begin(), fName.end(), '\"'),
+                        fName.end());
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
