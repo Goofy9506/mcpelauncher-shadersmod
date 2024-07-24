@@ -180,6 +180,9 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
                                 "Patched shader %s via AAssetManager",
                                 fName.c_str());
+            subpackArray[0].erase(
+            std::remove(subpackArray[0].begin(), subpackArray[0].end(), '\"'),
+            subpackArray[0].end());
             return AAssetManager_open(
                 mgr,
                 (assetsToRoot + dataDir + "/games/com.mojang/resource_packs/" +
