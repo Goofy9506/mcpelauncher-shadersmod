@@ -119,8 +119,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               if (strstr(en3->d_name, ".material.bin")) {
                 shadersList.push_back(std::string(en3->d_name));
               }
+              closedir(dir3);
             }
-            closedir(dir3);
 
             if (strstr(en->d_name, ".material.bin")) {
               shadersList.push_back(std::string(en->d_name));
