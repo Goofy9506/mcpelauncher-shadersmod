@@ -100,12 +100,10 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/renderer/materials")
                          .c_str());
-      if (subpackArray.end() != subpackArray.begin()) {
-        dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
-                        std::string(ent->d_name) + "/subpacks/" +
-                        std::string(subpackArray[0]) + "/renderer/materials")
-                           .c_str());
-      }
+      dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                      std::string(ent->d_name) + "/subpacks/" +
+                      std::string(subpackArray[0]) + "/renderer/materials")
+                         .c_str());
       std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
@@ -115,9 +113,11 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
-            while ((en3 = readdir(dir3)) != NULL) {
-              if (strstr(en3->d_name, ".material.bin")) {
-                shadersList.push_back(std::string(en3->d_name));
+            if (dir3) {
+              while ((en3 = readdir(dir3)) != NULL) {
+                if (strstr(en3->d_name, ".material.bin")) {
+                  shadersList.push_back(std::string(en3->d_name));
+                }
               }
               closedir(dir3);
             }
