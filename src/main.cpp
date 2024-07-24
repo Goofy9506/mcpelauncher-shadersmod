@@ -125,6 +125,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               while ((en3 = readdir(dir3)) != NULL) {
                 if (strstr(en3->d_name, ".material.bin")) {
                   shadersList.push_back(std::string(en3->d_name));
+                        std::cout << std::string(en3->d_name) << std::endl;
                 }
                 printf("%s\n", "Subpack Found");
               }
