@@ -102,6 +102,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                          .c_str());
       if (subpackArray.end() != subpackArray.begin()) {
         dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                        std::string(ent->d_name) + "/subpacks/" +
                         std::string(subpackArray[0]) + "/renderer/materials")
                            .c_str());
       }
