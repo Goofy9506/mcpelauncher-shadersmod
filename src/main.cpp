@@ -163,7 +163,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
           //     folderList[0]+ "/subpacks/" + subpackArray[0] +
           //     "/renderer/materials/" + fName;
 
-          if (std::find(shadersList.begin(), shadersList.end(), fName) !=
+          if (std::find(shadersList.begin(), shadersList.end(), shaderLoc) !=
               shadersList.end()) {
 
             __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
