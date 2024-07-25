@@ -116,6 +116,13 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
+            if (strstr(en->d_name, ".material.bin")) {
+              std::string e = folderList[0] + "/renderer/materials/" +
+                              std::string(en->d_name);
+              shadersList.push_back(std::string(e));
+              printf("%s\n", "Shader Found");
+            }
+
             while ((en3 = readdir(dir3)) != NULL) {
               if (strstr(en3->d_name, ".material.bin")) {
                 std::string e = folderList[0] + "/subpacks/" + subpackArray[0] +
@@ -126,12 +133,6 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               }
               printf("%s\n", "Subpack Found");
               closedir(dir3);
-            }
-
-            if (strstr(en->d_name, ".material.bin")) {
-              std::string e = folderList[0] + "/renderer/materials/" +
-                              std::string(en->d_name);
-              shadersList.push_back(std::string(e));
             }
           }
         } else {
