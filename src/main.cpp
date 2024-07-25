@@ -90,45 +90,45 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
   DIR *dir;
   struct dirent *ent;
   struct dirent *en;
-  // struct dirent *en3;
+  struct dirent *en3;
   dir = opendir((dataDir + "/games/com.mojang/resource_packs").c_str());
   if (dir) {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
       DIR *dir2;
-      // DIR *dir3;
+      DIR *dir3;
       dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/renderer/materials")
                          .c_str());
-      // dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
-      //                 std::string(ent->d_name) + "/subpacks/" +
-      //                 subpackArray[0] + "/renderer/materials")
-      //                    .c_str());
+      dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                      std::string(ent->d_name) + "/subpacks/" +
+                      subpackArray[0] + "/renderer/materials")
+                         .c_str());
       std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
         nlohmann::json j = nlohmann::json::parse(file);
         auto j_str = to_string(j["header"]["uuid"]);
-        // subpackArray[0].erase(
-        //     std::remove(subpackArray[0].begin(), subpackArray[0].end(),
-        //     '\"'), subpackArray[0].end());
+        subpackArray[0].erase(
+            std::remove(subpackArray[0].begin(), subpackArray[0].end(), '\"'),
+            subpackArray[0].end());
 
         if (j_str == packIdArray[0]) {
           folderList.push_back(std::string(ent->d_name));
           while ((en = readdir(dir2)) != NULL) {
-            // if (dir3) {
-            //   while ((en3 = readdir(dir3)) != NULL) {
-            //     if (strstr(en3->d_name, ".material.bin")) {
-            //       std::string e = folderList[0] + "/subpacks/" +
-            //                       subpackArray[0] + "/renderer/materials/" +
-            //                       std::string(en3->d_name);
-            //       shadersList.push_back(std::string(e));
-            //       std::cout << std::string(e) << std::endl;
-            //     }
-            //     printf("%s\n", "Subpack Found");
-            //   }
-            //   closedir(dir3);
-            // }
+            if (dir3) {
+              while ((en3 = readdir(dir3)) != NULL) {
+                if (strstr(en3->d_name, ".material.bin")) {
+                  std::string e = folderList[0] + "/subpacks/" +
+                                  subpackArray[0] + "/renderer/materials/" +
+                                  std::string(en3->d_name);
+                  shadersList.push_back(std::string(e));
+                  std::cout << std::string(e) << std::endl;
+                }
+                printf("%s\n", "Subpack Found");
+              }
+              closedir(dir3);
+            }
 
             if (strstr(en->d_name, ".material.bin")) {
               std::string e = folderList[0] + "/renderer/materials/" +
@@ -159,9 +159,9 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
               std::string(filename).find_last_of("/") + 1);
           std::string shaderLoc =
               folderList[0] + "/renderer/materials/" + fName;
-          // std::string shaderLoc2 =
-          //     folderList[0]+ "/subpacks/" + subpackArray[0] +
-          //     "/renderer/materials/" + fName;
+          std::string shaderLoc2 = folderList[0] + "/subpacks/" +
+                                   subpackArray[0] + "/renderer/materials/" +
+                                   fName;
 
           if (std::find(shadersList.begin(), shadersList.end(), shaderLoc) !=
               shadersList.end()) {
@@ -175,9 +175,21 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                                        shaderLoc)
                                           .c_str(),
                                       mode);
+          } else if (std::find(shadersList.begin(), shadersList.end(),
+                               shaderLoc2) != shadersList.end()) {
+            __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
+                                "Patched shader %s via AAssetManager",
+                                fName.c_str());
+            return AAssetManager_open(mgr,
+                                      (assetsToRoot + dataDir +
+                                       "/games/com.mojang/resource_packs/" +
+                                       shaderLoc2)
+                                          .c_str(),
+                                      mode);
           } else {
             return AAssetManager_open(mgr, filename, mode);
           }
+
         } else {
           return AAssetManager_open(mgr, filename, mode);
         }
