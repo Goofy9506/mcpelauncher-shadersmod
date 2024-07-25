@@ -4,7 +4,7 @@ This is a mod for mcpelauncher-manifest that allows for RenderDragon shaders.
 
 Usage: 
 
-Install your shaders the regular way, make sure your shaders are at the very top of your global resource packs list or it will not work. Restart your game after the shader pack has been applied to the global resource packs list.
+Install your shaders the regular way, apply them to your global resource packs list, <sub>(the top most shader will be the one applied)</sub> restart your game after the shader pack has been applied to the global resource packs list and the shader should start working.
 
 NewbX Future Shaders running with the mod on:
   ![NewbX Future](https://github.com/user-attachments/assets/586c472a-5d4d-4807-a7ad-bd50f324206c)
