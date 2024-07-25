@@ -126,8 +126,8 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                   std::cout << std::string(e) << std::endl;
                 }
                 printf("%s\n", "Subpack Found");
+                closedir(dir3);
               }
-              closedir(dir3);
             }
 
             if (strstr(en->d_name, ".material.bin")) {
