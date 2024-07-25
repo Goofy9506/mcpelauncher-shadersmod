@@ -157,31 +157,24 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
         if ((strstr(filename, ".material.bin"))) {
           std::string fName = std::string(filename).substr(
               std::string(filename).find_last_of("/") + 1);
+          std::string shaderLoc =
+              folderList[0] + "/renderer/materials/" + fName;
+          // std::string shaderLoc2 =
+          //     folderList[0]+ "/subpacks/" + subpackArray[0] +
+          //     "/renderer/materials/" + fName;
 
-          // if (std::find(shadersList.begin(), shadersList.end(), fName) !=
-          //     shadersList.end()) {
-          if (shadersList.size() != 0) {
+          if (std::find(shadersList.begin(), shadersList.end(), fName) !=
+              shadersList.end()) {
 
-            for (auto it = 0; it != shadersList.size(); ++it) {
-              __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
-                                  "Patched shader %s via AAssetManager",
-                                  shadersList[it].c_str());
-              return AAssetManager_open(mgr,
-                                        (assetsToRoot + dataDir +
-                                         "/games/com.mojang/resource_packs/" +
-                                         shadersList[it])
-                                            .c_str(),
-                                        mode);
-            }
-            // fName.erase(std::remove(fName.begin(), fName.end(), '\"'),
-            //             fName.end());
-
-            // AAssetManager_open(mgr,
-            //  (assetsToRoot + dataDir +
-            //   "/games/com.mojang/resource_packs/" +
-            //   fName)
-            //      .c_str(),
-            //  mode);
+            __android_log_print(ANDROID_LOG_VERBOSE, "ShadersMod",
+                                "Patched shader %s via AAssetManager",
+                                fName.c_str());
+            return AAssetManager_open(mgr,
+                                      (assetsToRoot + dataDir +
+                                       "/games/com.mojang/resource_packs/" +
+                                       shaderLoc)
+                                          .c_str(),
+                                      mode);
           } else {
             return AAssetManager_open(mgr, filename, mode);
           }
