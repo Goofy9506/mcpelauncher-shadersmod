@@ -74,14 +74,17 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
                          "global_resource_packs.json")); // open all directory
     if (file2) {
       nlohmann::json j = nlohmann::json::parse(file2);
-      auto j_str = to_string(j[0]["pack_id"]);
-      packIdArray.push_back(j_str);
-      if (j[0]["subpack"] != NULL) {
-        auto e_str = to_string(j[0]["subpack"]);
-        subpackArray.push_back(e_str);
-        std::cout << e_str << std::endl;
+
+      for (auto it = 0; it != j.size(); it++) {
+        auto j_str = to_string(j[it]["pack_id"]);
+        packIdArray.push_back(j_str);
+        if (j[it]["subpack"] != NULL) {
+          auto e_str = to_string(j[it]["subpack"]);
+          subpackArray.push_back(e_str);
+          std::cout << e_str << std::endl;
+        }
+        std::cout << j_str << std::endl;
       }
-      std::cout << j_str << std::endl;
     }
     file2.close();
     closedir(dr2);
@@ -100,10 +103,7 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
       dir2 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
                       std::string(ent->d_name) + "/renderer/materials")
                          .c_str());
-      dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
-                      std::string(ent->d_name) + "/subpacks/" +
-                      subpackArray[0] + "/renderer/materials")
-                         .c_str());
+
       std::ifstream file((dataDir + "/games/com.mojang/resource_packs/" +
                           std::string(ent->d_name) + "/manifest.json"));
       if (dir2) {
@@ -113,32 +113,43 @@ extern "C" void __attribute__((visibility("default"))) mod_preinit() {
             std::remove(subpackArray[0].begin(), subpackArray[0].end(), '\"'),
             subpackArray[0].end());
 
-        if (j_str == packIdArray[0]) {
-          folderList.push_back(std::string(ent->d_name));
-          while ((en = readdir(dir2)) != NULL) {
-            if (strstr(en->d_name, ".material.bin")) {
-              std::string e = folderList[0] + "/renderer/materials/" +
-                              std::string(en->d_name);
-              shadersList.push_back(std::string(e));
-              printf("%s\n", "Shader Found");
+        dir3 = opendir((dataDir + "/games/com.mojang/resource_packs/" +
+                        std::string(ent->d_name) + "/subpacks/" +
+                        subpackArray[0] + "/renderer/materials")
+                           .c_str());
+        for (auto it = 0; it != packIdArray.size(); it++) {
+          if (j_str == packIdArray[it]) {
+            folderList.push_back(std::string(ent->d_name));
+            while ((en = readdir(dir2)) != NULL) {
+              if (strstr(en->d_name, ".material.bin")) {
+                std::string e = folderList[0] + "/renderer/materials/" +
+                                std::string(en->d_name);
+                if (shadersList.size() == 0) {
+                  shadersList.push_back(std::string(e));
+                  printf("%s\n", "Shader Found");
+                }
+              }
             }
 
-            while ((en3 = readdir(dir3)) != NULL) {
-              if (strstr(en3->d_name, ".material.bin")) {
-                std::string e = folderList[0] + "/subpacks/" + subpackArray[0] +
-                                "/renderer/materials/" +
-                                std::string(en3->d_name);
-                shadersList.push_back(std::string(e));
-                std::cout << std::string(e) << std::endl;
+            if (dir3) {
+              while ((en3 = readdir(dir3)) != NULL) {
+                if (strstr(en3->d_name, ".material.bin")) {
+                  std::string e = folderList[0] + "/subpacks/" +
+                                  subpackArray[0] + "/renderer/materials/" +
+                                  std::string(en3->d_name);
+                  if (shadersList.size() == 0) {
+                    shadersList.push_back(std::string(e));
+                    std::cout << std::string(e) << std::endl;
+                  }
+                }
+                printf("%s\n", "Subpack Found");
               }
-              printf("%s\n", "Subpack Found");
-              closedir(dir3);
             }
           }
-        } else {
         }
 
         file.close();
+        closedir(dir3);
         closedir(dir2);
       }
     }
